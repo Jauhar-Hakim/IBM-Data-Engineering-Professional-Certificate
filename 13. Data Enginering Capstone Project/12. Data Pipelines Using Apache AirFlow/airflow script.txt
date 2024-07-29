@@ -1,0 +1,5 @@
+cp process_web_log.py $AIRFLOW_HOME/dags
+
+airflow dags unpause process_web_log
+
+airflow dags trigger process_web_log
