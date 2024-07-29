@@ -1,0 +1,32 @@
+mongoimport -u root -p MzI4NC1taWtpa2tp --authenticationDatabase admin --db entertainment --collection movies movies.json
+
+db.movies.aggregate([
+    { "$group": { "_id": "$year", "moviecount": { "$sum": 1 } } },
+    {$sort :{"moviecount":-1}},
+    {$limit : 5} ])
+
+db.movies.countDocuments({year : {$gt : 1999}})
+
+db.movies.aggregate([
+    { $match : {year : 2007} },
+    { $group: { _id: "$year", averageVotes: {$avg : "$Votes"}} }
+])
+
+mongoexport -u root -p MzI4NC1taWtpa2tp --authenticationDatabase admin --db entertainment --collection movies --out partial_data.csv --type=csv --fields _id,title,year,rating,director
+
+CREATE KEYSPACE entertainment
+WITH replication = {'class':'SimpleStrategy', 'replication_factor':3};
+
+CREATE TABLE movies(
+    id int PRIMARY KEY,
+    title text,
+    year int,
+    rating text,
+    director text
+);
+COPY entertainment.movies(id,title,year,rating,director) FROM 'partial_data.csv' WITH DELIMITER=',' AND HEADER=TRUE;
+
+CREATE INDEX IF NOT EXISTS rating_index
+ON entertainment.movies (rating);
+
+SELECT COUNT(*) FROM movies WHERE rating='G';  

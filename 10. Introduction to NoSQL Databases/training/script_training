@@ -1,0 +1,11 @@
+mongoimport -u root -p Mjk1ODgtbWlraWtr --authenticationDatabase admin --db training --collection diamonds --file /home/project/diamonds.json
+
+mongoexport -u root -p Mjk1ODgtbWlraWtr --authenticationDatabase admin --db training --collection diamonds --out /home/project/mongodb_exported_data.json
+
+mongoexport -u root -p Mjk1ODgtbWlraWtr --authenticationDatabase admin --db training --collection diamonds --out /home/project/mongodb_exported_data.csv --type=csv --fields _id,clarity,cut,price
+
+
+
+
+
+
